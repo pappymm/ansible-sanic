@@ -1,0 +1,54 @@
+- name: Deploy Sanic App on AWS EC2
+  hosts: ec2
+  become: yes
+  tasks:
+
+    - name: Install required packages
+      yum:
+        name:
+          - python3
+          - python3-pip
+          - git
+        state: present
+
+    - name: Clone Sanic app from GitHub
+      git:
+        repo: "https://github.com/pappymm/sanicapp.git"
+        dest: "/opt/sanicapp"
+        version: main
+
+    - name: Create virtual environment
+      command: python3 -m venv /opt/sanicapp/env
+      args:
+        creates: /opt/sanicapp/env
+
+    - name: Install Python dependencies
+      pip:
+        requirements: /opt/sanicapp/requirements.txt
+        virtualenv: /opt/sanicapp/env
+
+    - name: Create systemd service for Sanic
+      copy:
+        dest: "/etc/systemd/system/sanicapp.service"
+        content: |
+          [Unit]
+          Description=Sanic App
+          After=network.target
+
+          [Service]
+          User=ec2-user
+          WorkingDirectory=/opt/sanicapp
+          ExecStart=/opt/sanicapp/env/bin/python /opt/sanicapp/app.py --host=0.0.0.0 --port=8000
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd and enable Sanic service
+      systemd:
+        name: sanicapp
+        enabled: yes
+        state: restarted
+        daemon_reload: yes
+
+    
