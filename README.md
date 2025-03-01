@@ -177,4 +177,10 @@ ansible-playbook -i inventory deploy.yml
 
 ## Conclusion
 
-Your Sanic app should now be running on **AWS EC2** and automatically restart on failures. If issues persist, review logs and adjust configurations accordingly. 🚀
+Your Sanic app should now be running on **AWS EC2** and automatically restart on failures. If issues persist, review logs and adjust configurations accordingly. 
+
+## Contact ##
+If you have any questions or suggestions, feel free to reach out:
+- **Email: pappymusa@gmail.com**
+- **GitHub: pappymm**
+- **Linkedin: https://www.linkedin.com/in/musa-saleh-musa-89b635128/**
